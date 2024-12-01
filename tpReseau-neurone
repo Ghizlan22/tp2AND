@@ -1,0 +1,50 @@
+import numpy as np
+
+# Fonction d'activation sigmoïde
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+# Dérivée de la fonction sigmoïde
+def sigmoid_derivative(x):
+    return sigmoid(x) * (1 - sigmoid(x))
+
+# Initialisation des paramètres
+W1, W2, W3, W4 = 0.5, 0.4, 0.3, 0.6  # Poids
+b1, b2 = 0.8, 0.3                   # Biais
+eta = 0.1                           # Taux d'apprentissage
+
+# Données d'entrée
+x1, x2, x3 = 1, 1, 0  # Entrées
+od = 1                # Sortie attendue
+
+# Étape 1 : Propagation avant
+z1 = W1 * x1 + W2 * x2 + W3 * x3 + b1
+a1 = sigmoid(z1)
+
+z2 = W4 * a1 + b2
+o = sigmoid(z2)
+
+# Calcul de l'erreur quadratique
+E = 0.5 * (od - o) ** 2
+print(f"Erreur avant mise à jour : {E:.5f}")
+
+# Étape 2 : Rétropropagation
+# Gradients pour la couche de sortie
+delta2 = (od - o) * sigmoid_derivative(z2)
+
+# Gradients pour la couche cachée
+delta1 = delta2 * W4 * sigmoid_derivative(z1)
+
+# Mise à jour des poids et biais (couche de sortie)
+W4 += eta * delta2 * a1
+b2 += eta * delta2
+
+# Mise à jour des poids et biais (couche cachée)
+W1 += eta * delta1 * x1
+W2 += eta * delta1 * x2
+W3 += eta * delta1 * x3
+b1 += eta * delta1
+
+# Affichage des résultats après mise à jour
+print(f"W1 = {W1:.5f}, W2 = {W2:.5f}, W3 = {W3:.5f}, W4 = {W4:.5f}")
+print(f"b1 = {b1:.5f}, b2 = {b2:.5f}")
